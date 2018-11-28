@@ -34,6 +34,7 @@ class nms(object):
 
 			record = np.where(iou<=self.threshold)[0] #np.where(condition) return a tuple
 			bbx_sort = bbx_sort[record+1] #nb
+		return final_bbx
 
 
 
