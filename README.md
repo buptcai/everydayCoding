@@ -1,2 +1,2 @@
 # everydayCoding
-Algorithm code
+Recurrent some machine-learning algorithm to improve coding ability.
