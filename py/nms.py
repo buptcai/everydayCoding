@@ -64,7 +64,7 @@ class nms(object):
 			iou = inter_area/(bbx_area[i]+bbx_area[pos+1:]-inter_area)
 
 			#linear
-			weights = 1-iou
+			weights = np.exp(-1*(np.square(iou))/0.5)
 			bbx_score[bbx_sort[pos+1:]] = bbx_score[bbx_sort[pos+1:]]*weights #update score
 			bbx_sort = np.argsort(bbx_score)[::-1] #update sort
 			pos = pos + 1
