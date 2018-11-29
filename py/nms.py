@@ -5,15 +5,15 @@ class nms(object):
 	def __init__(self,bbx):
 		self.bbx = bbx
 
-	def nms(self,iou_threshold):
+	def non_maximum_suppression(self,iou_threshold=0.6):
 		
 		bbx = self.bbx
-		bbx_x1 = bbx[:0] #min
-		bbx_y1 = bbx[:1]
-		bbx_x2 = bbx[:2] #max
-		bbx_y2 = bbx[:3]
-		bbx_score = bbx[:4]
-		bbx_area = (bbx_y2-bbx_y1)*(bbx_x2-bbx_1)
+		bbx_x1 = bbx[:,0] #min
+		bbx_y1 = bbx[:,1]
+		bbx_x2 = bbx[:,2] #max
+		bbx_y2 = bbx[:,3]
+		bbx_score = bbx[:,4]
+		bbx_area = (bbx_y2-bbx_y1)*(bbx_x2-bbx_x1)
 
 		bbx_sort = np.argsort(bbx_score)[::-1] # from large to small
 		final_bbx = []
@@ -31,22 +31,22 @@ class nms(object):
 			inter_area = w*h #n-1
 			iou = inter_area/(bbx_area[i]+bbx_area[bbx_sort[1:]]-inter_area)
 
-			record = np.where(iou<=self.iou_threshold)[0] #np.where(condition) return a tuple
+			record = np.where(iou<=iou_threshold)[0] #np.where(condition) return a tuple
 			bbx_sort = bbx_sort[record+1] #nb
 
 		return final_bbx
 
-	def soft_nms(self,score_threshold):
+	def soft_non_maximum_suppression(self,score_threshold=0.5):
 
 		bbx = self.bbx
-		bbx_x1 = bbx[:0]
-		bbx_y1 = bbx[:1]
-		bbx_x2 = bbx[:2]
-		bbx_y2 = bbx[:3]
-		bbx_score = bbx[:4]
+		bbx_x1 = bbx[:,0]
+		bbx_y1 = bbx[:,1]
+		bbx_x2 = bbx[:,2]
+		bbx_y2 = bbx[:,3]
+		bbx_score = bbx[:,4]
 
 		bbx_sort = np.argsort(bbx_score)[::-1]
-		bbx_area = (bbx_y2-bbx_y1)*(bbx_x2-bbx_1) #2>1
+		bbx_area = (bbx_y2-bbx_y1)*(bbx_x2-bbx_x1) #2>1
 		bbx_size = bbx_sort.size
 		final_bbx = []
 		pos = 0
@@ -76,7 +76,19 @@ class nms(object):
 		return final_bbx
 
 
+def main():
+	bbox = np.array([[30, 20, 230, 200, 1], 
+                     [50, 50, 260, 220, 0.9],
+                     [40, 30, 256, 210, 0.8],
+                     [430, 280, 460, 360, 0.7]])
+	NMS = nms(bbox)
+	final_box = NMS.non_maximum_suppression(iou_threshold=0.5)
+	print(final_box)
+	final_box_soft = NMS.soft_non_maximum_suppression(score_threshold=0.8)
+	print(final_box_soft)
 
+if __name__ == '__main__':
+	main()
 
 
 
