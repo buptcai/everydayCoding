@@ -26,7 +26,7 @@ class decisiontree(object):
 		Ent = self.dtree_information_entropy(dataset)
 		for i in range(len(properties)):
 			Ent_sum = 0
-			properties_v = np.unique(dataset[:,j]).size
+			properties_v = np.unique(dataset[:,j])
 
 			for j in range(len(properties_v)):
 				index_dataset_son_v = np.where(dataset[:,j]==properties_v[j])[0]
@@ -37,8 +37,12 @@ class decisiontree(object):
 
 			gain_son = Ent-Ent_sum
 			gain.append(gain_son)
+		max_index = properties[gain.index(max(gain))]
+		return max_index
 
-		max_index = properties[gain.index(max(gain))]  
-
-	def dtree_treeGeneration(dataset,properties):
-		pass
+	def dtree_treeGeneration(self,dataset,properties):
+		dataset = np.array(dataset)
+		value = dataset[:,-1]
+		if(np.unique(value).size==1):
+			#set it leaf point
+			return
