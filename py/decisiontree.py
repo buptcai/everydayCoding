@@ -7,6 +7,7 @@ class decisiontree(object):
 		self.origin_datasets = origin_datasets
 		self.properties = properties
 		self.length = np.array(properties).size
+		self.properties_copy = list(np.arange(self.length))
 
 	def dtree_information_entropy(self,dataset):
 		#dataset:m*(n+1) ,list or array 
@@ -38,7 +39,7 @@ class decisiontree(object):
 			gain_son = Ent-Ent_sum
 			gain.append(gain_son)
 		max_index = properties[gain.index(max(gain))]
-		return max_index
+		return max_index,gain.index(max(gain))
 
 	def dtree_treeGeneration(self,dataset,properties):
 		dataset = np.array(dataset)
@@ -46,3 +47,46 @@ class decisiontree(object):
 		if(np.unique(value).size==1):
 			#set it leaf point
 			return
+		dataset_pro = dataset[:,properties]
+		if (len(a)==0 or np.unique(dataset_pro,axis=0).shape[0]==1):
+			#set it leaf point
+			return
+		best_gain_index,index = self.dtree_information_gain(dataset,properties)
+		best_property = dataset[:,best_gain_index]
+		property_value = np.unique(best_property)
+
+		for i in range(property_value.size):
+			dataset_son = dataset[np.where(best_property==property_value[i])[0]]
+			if dataset_son.size == 0:
+				#
+				return
+			else:
+				#properties have been changed	
+				new_properties = del(properties[index])
+				self.dtree_treeGeneration(dataset_son,new_properties)
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
