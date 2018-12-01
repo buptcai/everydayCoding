@@ -39,9 +39,6 @@ class decisiontree(object):
 			gain_son = Ent-Ent_sum
 			gain.append(gain_son)
 		max_index = properties[gain.index(max(gain))]
-		#print(properties)
-		#print(max_index)
-		#print(gain.index(max(gain)))
 		return max_index,gain.index(max(gain))
 
 	def dtree_treeGeneration(self,dataset,properties):
@@ -70,8 +67,11 @@ class decisiontree(object):
 				self.tree.append([best_gain_index,property_value[i]])
 				self.dtree_treeGeneration(dataset_son,properties)
 
-		
-trainData = [
+	def ftree_treeGeneration(self):
+		self.dtree_treeGeneration(self.origin_datasets,self.properties_copy)
+
+def main():
+	datasets = [
         [0, 0, 0, 0,0],
         [0, 0, 0, 1,0],
         [0, 1, 0, 1,1],
@@ -88,10 +88,14 @@ trainData = [
         [2, 1, 0, 2,1],
         [2, 0, 0, 0,0],
     ]
-properties=[0,1,2,3]
-tree = decisiontree(trainData,properties)
-tree.dtree_treeGeneration(trainData,properties)
-print(tree.tree)
+	properties = [0, 1, 2, 3]
+	tree = decisiontree(datasets,properties)
+	tree.ftree_treeGeneration()
+	print(tree.tree)
+
+if __name__ == '__main__':
+	main()
+
 
 
 
