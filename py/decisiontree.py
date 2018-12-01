@@ -8,6 +8,7 @@ class decisiontree(object):
 		self.properties = properties
 		self.length = np.array(properties).size
 		self.properties_copy = list(np.arange(self.length))
+		self.tree = []
 
 	def dtree_information_entropy(self,dataset):
 		#dataset:m*(n+1) ,list or array 
@@ -27,10 +28,9 @@ class decisiontree(object):
 		Ent = self.dtree_information_entropy(dataset)
 		for i in range(len(properties)):
 			Ent_sum = 0
-			properties_v = np.unique(dataset[:,j])
-
+			properties_v = np.unique(dataset[:,properties[i]])
 			for j in range(len(properties_v)):
-				index_dataset_son_v = np.where(dataset[:,j]==properties_v[j])[0]
+				index_dataset_son_v = np.where(dataset[:,properties[i]]==properties_v[j])[0]
 				dataset_son_v = dataset[index_dataset_son_v]
 				weight = len(dataset_son_v)/len(dataset)
 				Ent_son = self.dtree_information_entropy(dataset_son_v)
@@ -39,6 +39,9 @@ class decisiontree(object):
 			gain_son = Ent-Ent_sum
 			gain.append(gain_son)
 		max_index = properties[gain.index(max(gain))]
+		#print(properties)
+		#print(max_index)
+		#print(gain.index(max(gain)))
 		return max_index,gain.index(max(gain))
 
 	def dtree_treeGeneration(self,dataset,properties):
@@ -47,27 +50,48 @@ class decisiontree(object):
 		if(np.unique(value).size==1):
 			#set it leaf point
 			return
+
 		dataset_pro = dataset[:,properties]
-		if (len(a)==0 or np.unique(dataset_pro,axis=0).shape[0]==1):
+		if (len(properties)==0 or np.unique(dataset_pro,axis=0).shape[0]==1):
 			#set it leaf point
 			return
 		best_gain_index,index = self.dtree_information_gain(dataset,properties)
 		best_property = dataset[:,best_gain_index]
 		property_value = np.unique(best_property)
-
-		for i in range(property_value.size):
+		properties.remove(properties[index])
+		for i in range(property_value.size):#the problem
 			dataset_son = dataset[np.where(best_property==property_value[i])[0]]
+			
 			if dataset_son.size == 0:
 				#
 				return
 			else:
-				#properties have been changed	
-				new_properties = del(properties[index])
-				self.dtree_treeGeneration(dataset_son,new_properties)
+				#properties have been changed
+				self.tree.append([best_gain_index,property_value[i]])
+				self.dtree_treeGeneration(dataset_son,properties)
 
 		
-
-
+trainData = [
+        [0, 0, 0, 0,0],
+        [0, 0, 0, 1,0],
+        [0, 1, 0, 1,1],
+        [0, 1, 1, 0,1],
+        [0, 0, 0, 0,0],
+        [1, 0, 0, 0,0],
+        [1, 0, 0, 1,0],
+        [1, 1, 1, 1,1],
+        [1, 0, 1, 2,1],
+        [1, 0, 1, 2,1],
+        [2, 0, 1, 2,1],
+        [2, 0, 1, 1,1],
+        [2, 1, 0, 1,1],
+        [2, 1, 0, 2,1],
+        [2, 0, 0, 0,0],
+    ]
+properties=[0,1,2,3]
+tree = decisiontree(trainData,properties)
+tree.dtree_treeGeneration(trainData,properties)
+print(tree.tree)
 
 
 
