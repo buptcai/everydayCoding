@@ -2,7 +2,7 @@ import numpy as np
 
 class naivebayesclassifier(object):
 
-	#data:(m,n),label:(m,) list
+	#data:(m,n),label:(m,)
 	 def __init__(self,train_data,train_label):
 	 	self.data = np.array(train_data)
 	 	self.label = np.array(train_label)
