@@ -10,7 +10,7 @@ class naivebayesclassifier(object):
 	 def naivebayes_predict(self,predict_data):
 	 	category = np.unique(self.label)
 	 	N = category.size
-	 	final_prob = []
+	 	final_prob = {}
 	 	for i in range(N):
 
 	 		Dc = np.sum(self.label==category[i])
@@ -23,10 +23,11 @@ class naivebayesclassifier(object):
 	 			condition_prob = (np.sum(self.data[:,j]==predict_data[j])+1)/(Dc+Ni)
 	 			prob = prob*condition_prob
 
-	 		final_prob.append(prob)
+	 		final_prob[category[i]] = prob
 	 	return final_prob
 
 def main():
+	pass
 	#waiting for validation
 
 if __name__ == '__main__':
