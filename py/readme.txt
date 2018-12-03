@@ -1,1 +1,1 @@
-py
+Python3,numpy
